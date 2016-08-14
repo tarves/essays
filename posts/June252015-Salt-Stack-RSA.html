@@ -1,0 +1,40 @@
+<h2>Why the RSA Public Key Should Not Equal 1</h2>
+
+<p>Not that long ago, Salt Stack, open-source software that is used to manage and configure cloud application software, was found to have been improperly using public-key RSA cryptography.  They had set their public key to the number 1 for performance reasons.  This, it turned out, was a serious security vulnerability and I wanted to discuss why that is.  You can see the actual git commit that changed the code <a href="">here</a>.  The public key was changed from 1 to 65537.  65537 was not selected randomly, there is a good reason it was chosen.</p>
+
+<p>One of the first things needed is a simple explanation of how RSA public key cryptography works and to get this, we need to review some of the mathematics behind it.</p>
+
+<p>The first thing needed is a review of Euler's Theorem.  It states that
+    If n and a are coprime, positive integers then
+    a<sup>&#966(n)</sup> &#8801 1 (mod n).
+    where &#966 is Euler's Totient Function.</p>
+
+<p>Euler's Totient Function, &#966(n), is simply the quantity of positive integers less than or equal to n that are relatively prime to n.</p>
+
+<h4>The RSA Function</h4>
+
+<p>The actual RSA cryptosystem functions as follows.</p>
+
+<ol>
+<li><p>Choose two prime numbers, p and q, where pq = N and where N is the modulus. We want p,q roughly the size of the square root of the number of bits of N.</p></li>
+<li><p>Compute the totient function, &#966(N) = &#966(p)&#966(q) = (p-1)(q-1)  =  N-p-q+1,  notice that &#966(N) is close to N.</p></li>
+<li><p>Choose a public exponent, e such that 1 &lt; e &lt; &#966(N).  Notice that 1 is out of bounds of the acceptable range of e.</p></li>
+<li><p>Compute a private exponent, d, such that d &#8801 e<sup>-1</sup) (mod &#966(N)) or d*e &#8801 1 (mod &#966(N)). </p></li>
+<li><p>Let the public key, pk = (N, e) and the private or secret key, sk = (N, d).</p></li>
+</ol>
+
+<p>The RSA function will be defined as follows.</p>
+
+<p>The encryption function, F(pk, e) maps the integers modulo N to itself, so it is a permutation over &#8484<sub>n</sub></sub>.  We shall call it RSA(x) = x<sup>e</sup> (mod N).</p>
+
+<p>The decryption function F<sup>-1</sup>(sk, d) = y<sup>d</sup>.</p>
+
+<p>Thus, y<sup>d</sup> = RSA<sup>d</sup> = x<sup>ed</sup> = x<sup>k&#966(N)+1</sup> = (x<sup>&#966(N)</sup>k * x = x.</p>
+
+<h4>So What Happens When e = 1?</h4>
+
+<p>Well, two things happen.</p>
+
+<p>First of all, from number 4 above, where e = 1, d &#8801 1 (mod &#966(N)) so the private key can be computed from this.</p>
+
+<p>Second, the encryption function, RSA(x) is now x<sup>1</sup> (mod N) so x (mod N).  So, if x is less than N, then no encryption occurred. </p>
