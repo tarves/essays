@@ -1,6 +1,6 @@
 <h2>Why the RSA Public Key Should Not Equal 1</h2>
 
-<p>Not that long ago, Salt Stack, open-source software that is used to manage and configure cloud application software, was found to have been improperly using public-key RSA cryptography.  They had set their public key to the number 1 for performance reasons.  This, it turned out, was a serious security vulnerability and I wanted to discuss why that is.  You can see the actual git commit that changed the code <a href="">here</a>.  The public key was changed from 1 to 65537.  65537 was not selected randomly, there is a good reason it was chosen.</p>
+<p>Not that long ago, Salt Stack, open-source software that is used to manage and configure cloud application software, was found to have been improperly using public-key RSA cryptography.  They had set their public key to the number 1 for performance reasons.  This, it turned out, was a serious security vulnerability and I wanted to discuss why that is.  You can see the actual git commit that changed the code <a href="https://github.com/saltstack/salt/commit/5dd304276ba5745ec21fc1e6686a0b28da29e6fc">here</a>.  The public key was changed from 1 to 65537.  65537 was not selected randomly, there is a good reason it was chosen.</p>
 
 <p>One of the first things needed is a simple explanation of how RSA public key cryptography works and to get this, we need to review some of the mathematics behind it.</p>
 
