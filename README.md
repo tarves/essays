@@ -1,1 +1,1 @@
-# blog
+# essays
